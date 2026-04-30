@@ -14,7 +14,7 @@ export default function OutfitItem({
           {outfit.image ? (
             <img
               src={`/images/${outfit.image}.png`}
-              // alt={outfit.mealname}
+              // alt={outfit.mealname} 
               className="productpic" 
             />
           ) : (
@@ -36,7 +36,7 @@ export default function OutfitItem({
                   }}
                 />
           </div>
-          <h3 className="temp">טמפרטורה:{Math.floor(middleTemp)}</h3>
+          <h3 className="temp">טמפרטורה: {Math.floor(middleTemp)}</h3>
           
         </li>
       </ul>
