@@ -1,0 +1,107 @@
+import { useForm } from "react-hook-form";
+import { Paper, Box, TextField, Button } from "@mui/material";
+import "../css/Login.css";
+import React from "react";
+import { Link } from "react-router-dom";
+import { loginUser } from "../api/userService";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userIn } from "../features/userSlice";
+
+export default function Login() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { register,handleSubmit,formState: { errors },} = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await loginUser(data);
+      console.log("התחברות הצליחה:", res.data);
+      console.log("Current user login:", res.data.user.Name);
+      // שמירת המשתמש המחובר
+      const currentUser = {
+        ...res.data.user, // userName, role, _id
+        token: res.data.token
+      };
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      dispatch(userIn(currentUser));
+      // מעבר לדף הבית
+      navigate("/");
+    } catch (error) {
+      alert(error.response?.data?.message || "אימייל או סיסמה שגויים");
+    }
+  };
+  
+   // כאן תשלחי לשרת עם axios צריך לעשות רק את השליחה של הנתונים לדטה בייס וגם עיצוב יפה
+ 
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+                <Box
+            sx={{minHeight: "100vh",display: "flex",justifyContent: "center",alignItems: "center",
+              backgroundImage: "url('../images/background.jpg')",backgroundSize: "cover",backgroundPosition: "center",
+            }}>
+      <Paper elevation={6} sx={{ p: 4,borderRadius: 3,color:"white" ,width: 400, height: 400,backgroundColor: "rgb(255, 255, 255)",  maxWidth: 500,mt: 5,
+        border: "2px solid rgb(173 194 255)",marginLeft:"500px"
+      }}>
+               <h2 style={{ color: "black" ,marginTop:0}}>
+          התחברות לחשבון</h2>
+          <div style={{ color: "black" }}>
+          מלאו את הטופס למטה כדי להתחבר לחשבונכם
+        </div>
+        {/* מייל */}
+        <Box sx={{ mb: 3 ,backgroundColor: "rgba(255, 255, 255, 0.22)",marginTop:5,borderRadius:2,border: "1px solid white"}}>
+          <TextField fullWidth label="מייל" error={!!errors.Email} helperText={errors.Email && "יש להזין מייל תקין"}
+            {...register("Email", {required: true,pattern: /^\S+@\S+$/,})}
+            InputProps={{style: { color: "black" }}}
+            InputLabelProps={{style: {  color: "black", right: 30, left: "auto", textAlign: "right" }}}/>
+        </Box>
+
+        {/* סיסמה */}
+          <Box sx={{
+            mb: 3,
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+            marginTop: 5,
+            borderRadius: 2,
+            border: "1px solid white"
+          }}>
+            <TextField
+              fullWidth
+              label="סיסמה"
+              type="password"
+              error={!!errors.Password}
+              helperText={errors.Password && "סיסמה 6–12 תווים"}
+              {...register("Password", {
+                required: true,
+                minLength: 6,
+                maxLength: 12,
+              })}
+            InputProps={{style: { color: "black" }}}
+              InputLabelProps={{
+                style: {
+                  color: "black",
+                  right: 30,
+                  left: "auto",
+                  textAlign: "right"
+                }
+              }} />
+          </Box>
+          
+        <div style={{ color: "black" }}>
+  אין לך חשבון?
+  <Link to="/signup" style={{ color: "rgb(45 44 245)", margin: "0px 0px 0px 220px" }}>
+    הרשמה
+  </Link> 
+</div>
+
+
+        {/* כפתור שליחה */}
+        <Button type="submit" fullWidth sx={{marginTop:2, height: 50,fontSize: 20,backgroundColor: "rgb(173 194 255)",color: "black",
+          }}variant="contained">
+          התחברות
+        </Button>
+        </Paper>
+      </Box>
+    </form>
+  );
+}
