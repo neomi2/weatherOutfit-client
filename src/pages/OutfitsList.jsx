@@ -5,7 +5,7 @@ import "../css/OutfitList.css";
 import { CircularProgress, Paper, Box, TextField, Button } from "@mui/material";
 import { deleteOutfitFromServer } from "../api/OutfitService";
 import React from "react";
-import OutfitItem from "../components/outfitItem";
+import OutfitItem from "../components/OutfitItem";
 import { useSelector } from "react-redux"; 
 // import { getOutfitsByTemp } from "../api/OutfitService";
 
