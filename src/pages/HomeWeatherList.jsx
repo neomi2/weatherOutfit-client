@@ -8,12 +8,13 @@ export default function HomeWeatherList() {
   const city = "Bnei Brak,IL";
   const date = new Date().toISOString().slice(0, 10);
 
+        const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const res = await axios.get("http://localhost:3001/weather", {
-          params: { city, date },
-        });
+const res = await axios.get(`${API_URL}/weather`, {
+  params: { city, date },
+});
         setWeatherData(res.data);
       } catch (err) {
         console.log(err.response?.data || err.message);
